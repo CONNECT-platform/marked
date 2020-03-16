@@ -75,7 +75,7 @@ As mentioned above, the main point of this library is to provide your own custom
 // my-code.tsx
 
 export function MyCode({ lang }, renderer, content) {
-  return <pre click={() => copyToClipboard(content)}>
+  return <pre onclick={() => copyToClipboard(content)}>
     <code class={'code ' + lang}>{content}</code>
   </pre>;
 }
