@@ -2,10 +2,12 @@ import { RendererLike } from '@connectv/html';
 import { Token, InlineLexer, TextRenderer, Slugger, TokensList } from 'marked';
 
 import { unescape } from './util/unescape';
-import { Options } from './options';
+import { PartialOptions, Options } from './options';
+import { fill } from './defaults';
 
 
-export class Parser<R=any, T=any> {
+export class Parser<R=unknown, T=unknown> {
+  options: Options<R, T>;
   tokens: Token[]  = [];
   token: Token;
   slugger = new Slugger();
@@ -15,9 +17,11 @@ export class Parser<R=any, T=any> {
   renderer: RendererLike<R, T>;
 
 
-  constructor(readonly options: Options<R, T>) {}
+  constructor(options?: PartialOptions<R, T>) {
+    this.options = fill(options || {}) as any;
+  }
 
-  parse(tokens: TokensList, renderer: RendererLike<any, any>) {
+  parse(tokens: TokensList, renderer: RendererLike<R, T>) {
     this.renderer = renderer;
     this.inline = new InlineLexer(tokens.links as any);
     this.inlineText = new InlineLexer(tokens.links as any, {
@@ -35,6 +39,12 @@ export class Parser<R=any, T=any> {
   next() {
     const _next = this.tokens.pop();
     if (_next) this.token = _next;
+    return _next;
+  }
+
+  safeNext() {
+    const _next = this.next();
+    if (!_next) throw new Error('Unexpected end of stream');
     return _next;
   }
 
@@ -58,14 +68,62 @@ export class Parser<R=any, T=any> {
     switch(this.token.type) {
       case 'space': return <fragment/>;
       case 'hr': return <this.options.Hr/>;
-      case 'heading': 
-        return <this.options.Heading 
-          depth={this.token.depth}
-          slug={this.slugger.slug(unescape(this.inlineText.output(this.token.text)))}>
-          {this.inline.output(this.token.text)}
-        </this.options.Heading>
+      case 'heading':
+        const slug = this.slugger.slug(unescape(this.inlineText.output(this.token.text)));
+        return <this.options.Heading depth={this.token.depth}
+              slug={slug}>{this.inline.output(this.token.text)}</this.options.Heading>;
+      case 'code':
+        return <this.options.Code lang={this.token.lang || ''}>{this.token.text}</this.options.Code>;
+      case 'table': {
+        const header = this.token.header.map((cell, i) => 
+            <this.options.TableHeaderCell align={(this.token as any).align[i]}>
+              {this.inline.output(cell)}
+            </this.options.TableHeaderCell>);
+
+        const body = this.token.cells.map(row => 
+          <this.options.TableRow>
+            {row.map((cell, j) => <this.options.TableCell align={(this.token as any).align[j]}>
+              {this.inline.output(cell)}
+            </this.options.TableCell>)}
+          </this.options.TableRow>);
+
+        return <this.options.Table header={header as any} body={body as any}/>;
+      }
+      case 'blockquote_start': {
+        const body = <fragment/>;
+        while (this.safeNext().type !== 'blockquote_end')
+          renderer.render(this.tok()).on(body);
+
+        return <this.options.BlockQuote>{body}</this.options.BlockQuote>;
+      }
+      case 'list_start': {
+        const body = <fragment/>;
+        const ordered = this.token.ordered;
+        while (this.safeNext().type !== 'list_end')
+          renderer.render(this.tok()).on(body);
+
+        return <this.options.List ordered={ordered}>{body}</this.options.List>;
+      }
+      case 'list_item_start': {
+        const body = <fragment/>;
+        const loose = (this.token as any).loose;
+        while (this.safeNext().type !== 'list_item_end') {
+          if (!loose && (this.token.type as any) === 'text')
+            renderer.render(<fragment>{this.parseText()}</fragment>).on(body);
+          else
+            renderer.render(this.tok()).on(body);
+        }
+
+        return <this.options.ListItem>{body}</this.options.ListItem>;
+      }
+      case 'html':
+        return <this.options.Html content={this.token.text}/>
+      case 'paragraph':
+        return <this.options.Paragraph>{this.inline.output(this.token.text)}</this.options.Paragraph>;
+      case 'text':
+        return <this.options.Paragraph>{this.parseText()}</this.options.Paragraph>
       default:
-        throw new Error();
+        throw new Error('Unrecognized Token:: ' + this.token.type);
     }
   }
 }
