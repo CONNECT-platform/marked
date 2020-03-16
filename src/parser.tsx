@@ -1,21 +1,20 @@
 import { RendererLike } from '@connectv/html';
 import { Token, InlineLexer, TextRenderer, Slugger, TokensList } from 'marked';
 
-import { unescape } from './util/unescape';
 import { PartialOptions, Options } from './options';
 import { fill } from './defaults';
+import { unescape } from './util/unescape';
 
 
 export class Parser<R=unknown, T=unknown> {
-  options: Options<R, T>;
-  tokens: Token[]  = [];
-  token: Token;
-  slugger = new Slugger();
+  readonly options: Options<R, T>;
 
-  inline: InlineLexer;
-  inlineText: InlineLexer;
-  renderer: RendererLike<R, T>;
-
+  private tokens: Token[]  = [];
+  private token: Token;
+  private slugger = new Slugger();
+  private inline: InlineLexer;
+  private inlineText: InlineLexer;
+  private renderer: RendererLike<R, T>;
 
   constructor(options?: PartialOptions<R, T>) {
     this.options = fill(options || {}) as any;
@@ -36,33 +35,33 @@ export class Parser<R=unknown, T=unknown> {
     return res;
   }
 
-  next() {
+  private next() {
     const _next = this.tokens.pop();
     if (_next) this.token = _next;
     return _next;
   }
 
-  safeNext() {
+  private safeNext() {
     const _next = this.next();
     if (!_next) throw new Error('Unexpected end of stream');
     return _next;
   }
 
-  peek() {
+  private peek() {
     return this.tokens[this.tokens.length - 1];
   }
 
-  parseText() {
+  private parseText() {
     const renderer = this.renderer;
     let body = (this.token as any).text || '';
 
     while(this.peek().type === 'text')
       body += '\n' + (this.next() as any).text;
     
-    return <fragment>{this.inline.output(body)}</fragment>
+    return <span _innerHTML={this.inline.output(body)}></span>;
   }
 
-  tok() {
+  private tok() {
     const renderer = this.renderer;
 
     switch(this.token.type) {
@@ -71,19 +70,19 @@ export class Parser<R=unknown, T=unknown> {
       case 'heading':
         const slug = this.slugger.slug(unescape(this.inlineText.output(this.token.text)));
         return <this.options.Heading depth={this.token.depth}
-              slug={slug}>{this.inline.output(this.token.text)}</this.options.Heading>;
+              slug={slug}><span _innerHTML={this.inline.output(this.token.text)}/></this.options.Heading>;
       case 'code':
         return <this.options.Code lang={this.token.lang || ''}>{this.token.text}</this.options.Code>;
       case 'table': {
         const header = this.token.header.map((cell, i) => 
             <this.options.TableHeaderCell align={(this.token as any).align[i]}>
-              {this.inline.output(cell)}
+              <span _innerHTML={this.inline.output(cell)}/>
             </this.options.TableHeaderCell>);
 
         const body = this.token.cells.map(row => 
           <this.options.TableRow>
             {row.map((cell, j) => <this.options.TableCell align={(this.token as any).align[j]}>
-              {this.inline.output(cell)}
+              <span _innerHTML={this.inline.output(cell)}/>
             </this.options.TableCell>)}
           </this.options.TableRow>);
 
@@ -119,7 +118,7 @@ export class Parser<R=unknown, T=unknown> {
       case 'html':
         return <this.options.Html content={this.token.text}/>
       case 'paragraph':
-        return <this.options.Paragraph>{this.inline.output(this.token.text)}</this.options.Paragraph>;
+        return <this.options.Paragraph><span _innerHTML={this.inline.output(this.token.text)}/></this.options.Paragraph>;
       case 'text':
         return <this.options.Paragraph>{this.parseText()}</this.options.Paragraph>
       default:

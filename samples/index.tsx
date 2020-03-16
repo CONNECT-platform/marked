@@ -7,28 +7,12 @@ const dom = new JSDOM();
 // ---------------
 
 import { Renderer } from '@connectv/html';
-import marked, { lexer } from 'marked';
-
-import { Parser } from '../src/parser';
-import { quotedComponents } from '../src/quote-comp';
+import { marked, quotedComponents } from '../src';
 
 const text = `
-# Hellow My Dear
+- Look \`at\` [Google](www.google.com)
 
-> :Tabs
->
-> Header of the tab bar
->
-> > :Tab name=index.ts
-> > \`\`\`typescript
-> > console.log('halo');
-> > \`\`\`
-> > Also other stuff
->
-> > :Tab name=world.ts
-> > \`\`\`typescript
-> > console.log('world');
-> > \`\`\`
+![some-image](image-url)
 `
 
 function Tabs(_: any, renderer: any, content: any) {
@@ -39,11 +23,12 @@ function Tab({name}: any, renderer: any, content: any) {
   return <div class="tab" data-tab-name={name}>{content}</div>;
 }
 
-const parser = new Parser({
-  BlockQuote: quotedComponents({ Tabs, Tab })
-});
-
 const renderer = new Renderer();
-renderer.render(parser.parse(lexer(text), renderer)).on(dom.window.document.body);
+
+renderer.render(
+  marked(text, {
+    BlockQuote: quotedComponents({ Tabs, Tab })
+  })(renderer)
+).on(dom.window.document.body);
 
 console.log(dom.serialize());
