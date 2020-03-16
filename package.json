@@ -1,0 +1,38 @@
+{
+  "name": "@connectv/marked",
+  "version": "0.0.1",
+  "description": "component-based markdown renderer",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node samples",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CONNECT-platform/marked.git"
+  },
+  "keywords": [
+    "markdown",
+    "components",
+    "connective"
+  ],
+  "author": "Eugene Ghanizadeh Khoub <ghanizadeh.eugene@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CONNECT-platform/marked/issues"
+  },
+  "homepage": "https://github.com/CONNECT-platform/marked#readme",
+  "dependencies": {
+    "@connectv/html": "0.0.16",
+    "@types/marked": "^0.7.3",
+    "marked": "^0.8.0"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^16.1.0",
+    "@types/jsdom-global": "^3.0.2",
+    "jsdom": "^16.2.1",
+    "jsdom-global": "^3.0.2",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.8.3"
+  }
+}
