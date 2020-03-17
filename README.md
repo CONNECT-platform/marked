@@ -133,7 +133,7 @@ The following components can be overriden, alongside the properties that the mar
 You can also use custom components (i.e. components that represent custom structural elements):
 
 ```tsx
-// tabs.tsx:
+// tabs.tsx
 
 export function Tabs(_, renderer, content) {
   return <div class="tabs">{content}</div>;
