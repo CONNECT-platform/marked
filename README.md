@@ -176,7 +176,7 @@ Result (`dist/index.html`):
   <body>
     <h1 id="some-markdown-content">Some markdown content</h1>
     <div class="tabs">
-      <div class="tab" data-tab-name="first tab">
+      <div class="tab" data-tab-name="first tab" data-default-tab>
         <p>content of the first tab</p>
       </div>
       <div class="tab" data-tab-name="second tab">
