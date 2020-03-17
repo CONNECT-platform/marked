@@ -12,7 +12,10 @@ import { marked, quotedComponents } from '../src';
 const text = `
 - Look \`at\` [Google](www.google.com)
 
-![some-image](image-url)
+> :Tabs
+> > :Tab name=first tab
+> >
+> > Halo
 `
 
 function Tabs(_: any, renderer: any, content: any) {

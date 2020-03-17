@@ -13,9 +13,10 @@ export function quotedComponents(map: ComponentMap) {
 
       if (name in map) {
         const Comp = map[name];
-        const props = parts.slice(1).reduce((props, part) => {
+        const props = parts.slice(1).join(' ').split(',').reduce((props, part) => {
           const [key, value] = part.split('=');
-          props[key] = value;
+          if (!!key && !!value)
+            props[key.trim()] = value.trim();
           return props;
         }, {} as {[prop: string]: string});
         const children: Node[] = [];
