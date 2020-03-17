@@ -1,4 +1,4 @@
-# marked
+# @connectv/marked
 Component-based markdown renderer for [CONNECTIVE HTML](https://github.com/CONNECT-platform/connective-html). The component-based approach allows you to provide your own custom (possibly interactive) components for the markdown conversion:
 
 ```tsx
