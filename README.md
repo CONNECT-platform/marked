@@ -20,7 +20,7 @@ const renderer = new Renderer();
 
 renderer.render(marked('## Hellow World!', {
   Heading: MyHeader
-})(renderer)).on(document.body);
+})).on(document.body);
 
 //
 // Result:
@@ -50,7 +50,7 @@ const md = `
 So this is some markdown text with **some features** and stuff.
 `;
 
-renderer.render(marked(md)(renderer)).on(document.body);
+renderer.render(marked(md)).on(document.body);
 ```
 
 Server-side rendering (using [CONNECTIVE SDH](https://github.com/CONNECT-platform/connective-sdh)):
@@ -100,7 +100,7 @@ export function something() {
 
 renderer.render(marked(md, {
   Code: MyCode
-})(renderer)).on(document.body);
+})).on(document.body);
 ```
 
 The following components can be overriden, alongside the properties that the markdown parser would pass to each component:
