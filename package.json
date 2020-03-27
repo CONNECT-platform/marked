@@ -1,11 +1,20 @@
 {
   "name": "@connectv/marked",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "component-based markdown renderer",
-  "main": "index.js",
+  "main": "dist/es5/index.js",
+  "module": "dist/es6/index.js",
+  "types": "dist/es6/index.d.ts",
+  "files": [
+    "dist/es6",
+    "dist/es5"
+  ],
   "scripts": {
     "start": "ts-node samples",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-es5": "tsc -p conf/typescript/es5.json",
+    "build-es6": "tsc -p conf/typescript/es6.json",
+    "build": "npm run build-es5 && npm run build-es6"
   },
   "repository": {
     "type": "git",
@@ -23,7 +32,7 @@
   },
   "homepage": "https://github.com/CONNECT-platform/marked#readme",
   "dependencies": {
-    "@connectv/html": "0.0.16",
+    "@connectv/html": "^0.2.2",
     "@types/marked": "^0.7.3",
     "marked": "^0.8.0"
   },

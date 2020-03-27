@@ -31,7 +31,7 @@ const renderer = new Renderer();
 renderer.render(
   marked(text, {
     BlockQuote: quotedComponents({ Tabs, Tab })
-  })(renderer)
+  })
 ).on(dom.window.document.body);
 
 console.log(dom.serialize());

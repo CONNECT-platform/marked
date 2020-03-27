@@ -1,8 +1,3 @@
-
-
-import { CompType } from '@connectv/html';
-
-
 export interface Options<R, T> {
   Space: any,
   Hr: any,
