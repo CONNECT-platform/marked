@@ -1,7 +1,7 @@
 import { CompType, RendererLike } from '@connectv/html';
 
 
-export type ComponentMap = {[name: string]: CompType<unknown, unknown>}
+export type ComponentMap = {[name: string]: any}
 
 
 export function quotedComponents(map: ComponentMap) {
