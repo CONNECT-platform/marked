@@ -9,7 +9,7 @@ const escapeReplacements = {
   '"': '&quot;',
   "'": '&#39;'
 };
-const getEscapeReplacement = (ch: string) => (escapeReplacements as any)[ch] as string;
+function getEscapeReplacement(ch: string){ return (escapeReplacements as any)[ch] as string };
 export function escape(html: string, encode: boolean) {
   if (encode) {
     if (escapeTest.test(html)) {
