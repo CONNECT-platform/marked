@@ -26,5 +26,6 @@ export function fill<R, T>(options: PartialOptions<R, T>) {
     ListItem: options.List || ListItem,
     Html: options.Html || Html,
     Paragraph: options.Paragraph || Paragraph,
+    inline: options.inline || {},
   }
 }

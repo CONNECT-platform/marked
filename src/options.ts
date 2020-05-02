@@ -14,6 +14,8 @@ export interface Options<R, T> {
   ListItem: any,
   Html: any,
   Paragraph: any,
+
+  inline: { [name: string]: any },
 }
 
 export type PartialOptions<R, T> = Partial<Options<R, T>>;

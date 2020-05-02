@@ -3,6 +3,7 @@ import { lexer } from 'marked';
 
 import { PartialOptions, Options } from './options';
 import { Parser } from './parser';
+import { InlineCompProcessor } from './inline-comp';
 
 
 export function marked<R=unknown, T=unknown>(markdown: string, options?: PartialOptions<R, T>) {
@@ -10,7 +11,8 @@ export function marked<R=unknown, T=unknown>(markdown: string, options?: Partial
   const tokens = lexer(markdown);
 
   return function(renderer: RendererLike<R, T>) {
-    return parser.parse(tokens, renderer);
+    const proc = new InlineCompProcessor(renderer, options?.inline || {});
+    return proc.process(parser.parse(tokens, renderer));
   }
 }
 
