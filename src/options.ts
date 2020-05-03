@@ -15,7 +15,13 @@ export interface Options<R, T> {
   Html: any,
   Paragraph: any,
 
-  inline: { [name: string]: any },
+  Link?: any,
+  Em?: any,
+  Strong?: any,
+  Del?: any,
+  Image?: any,
+  CodeSpan?: any,
+  Text?: any
 }
 
 export type PartialOptions<R, T> = Partial<Options<R, T>>;

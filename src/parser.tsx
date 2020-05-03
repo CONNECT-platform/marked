@@ -2,6 +2,7 @@ import { RendererLike } from '@connectv/html';
 import { Token, InlineLexer, TextRenderer, Slugger, TokensList } from 'marked';
 
 import { PartialOptions, Options } from './options';
+import { InlineProcessor } from './inline';
 import { fill } from './defaults';
 import { unescape } from './util/unescape';
 
@@ -12,7 +13,7 @@ export class Parser<R=unknown, T=unknown> {
   private tokens: Token[]  = [];
   private token: Token;
   private slugger = new Slugger();
-  private inline: InlineLexer;
+  private inline: InlineProcessor<R, T>;
   private inlineText: InlineLexer;
   private renderer: RendererLike<R, T>;
 
@@ -22,7 +23,7 @@ export class Parser<R=unknown, T=unknown> {
 
   parse(tokens: TokensList, renderer: RendererLike<R, T>) {
     this.renderer = renderer;
-    this.inline = new InlineLexer(tokens.links as any);
+    this.inline = new InlineProcessor(tokens, renderer, this.options);
     this.inlineText = new InlineLexer(tokens.links as any, {
       renderer: new TextRenderer() as any
     });
@@ -52,13 +53,12 @@ export class Parser<R=unknown, T=unknown> {
   }
 
   private parseText() {
-    const renderer = this.renderer;
     let body = (this.token as any).text || '';
 
     while(this.peek().type === 'text')
       body += '\n' + (this.next() as any).text;
-    
-    return <span _innerHTML={this.inline.output(body)}></span>;
+
+    return this.inline.process(body);
   }
 
   private tok() {
@@ -70,19 +70,19 @@ export class Parser<R=unknown, T=unknown> {
       case 'heading':
         const slug = this.slugger.slug(unescape(this.inlineText.output(this.token.text)));
         return <this.options.Heading depth={this.token.depth}
-              slug={slug}><span _innerHTML={this.inline.output(this.token.text)}/></this.options.Heading>;
+              slug={slug}>{this.inline.process(this.token.text)}</this.options.Heading>;
       case 'code':
         return <this.options.Code lang={this.token.lang || ''}>{this.token.text}</this.options.Code>;
       case 'table': {
         const header = this.token.header.map((cell, i) => 
             <this.options.TableHeaderCell align={(this.token as any).align[i]}>
-              <span _innerHTML={this.inline.output(cell)}/>
+              {this.inline.process(cell)}
             </this.options.TableHeaderCell>);
 
         const body = this.token.cells.map(row => 
           <this.options.TableRow>
             {row.map((cell, j) => <this.options.TableCell align={(this.token as any).align[j]}>
-              <span _innerHTML={this.inline.output(cell)}/>
+              {this.inline.process(cell)}
             </this.options.TableCell>)}
           </this.options.TableRow>);
 
@@ -118,7 +118,7 @@ export class Parser<R=unknown, T=unknown> {
       case 'html':
         return <this.options.Html content={this.token.text}/>
       case 'paragraph':
-        return <this.options.Paragraph><span _innerHTML={this.inline.output(this.token.text)}/></this.options.Paragraph>;
+        return <this.options.Paragraph>{this.inline.process(this.token.text)}</this.options.Paragraph>;
       case 'text':
         return <this.options.Paragraph>{this.parseText()}</this.options.Paragraph>
       default:

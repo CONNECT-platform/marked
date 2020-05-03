@@ -10,12 +10,13 @@ import { Renderer } from '@connectv/html';
 import { marked, quotedComponents } from '../src';
 
 const text = `
-- Look \`at\` _[:Tag]Halo!_
+- Look \`at\` _Me!_
 
 > :Tabs
 > > :Tab name=first tab
 > >
 > > Halo
+> > [Halo _World_](:X (x=2, y=34))
 `
 
 function Tabs(_: any, renderer: any, content: any) {
@@ -26,16 +27,20 @@ function Tab({name}: any, renderer: any, content: any) {
   return <div class="tab" data-tab-name={name}>{content}</div>;
 }
 
-function Tag({avatar}: any, renderer: any, content: any) {
-  return <span class="tag">{avatar?<img src={avatar}/>:''}{content}</span>
+function Link(_: any, renderer: any, content: any) {
+  return <span class="link">{content}</span>
+}
+
+function Em(_: any, renderer: any, content: any) {
+  return <b>{content}</b>;
 }
 
 const renderer = new Renderer();
 
 renderer.render(
   marked(text, {
+    Link, Em,
     BlockQuote: quotedComponents({ Tabs, Tab }),
-    inline: { Tag }
   })
 ).on(dom.window.document.body);
 

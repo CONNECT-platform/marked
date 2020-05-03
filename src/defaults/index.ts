@@ -1,4 +1,4 @@
-import { PartialOptions, Options } from '../options';
+import { PartialOptions } from '../options';
 
 import { Space } from './space';
 import { Hr } from './hr';
@@ -26,6 +26,13 @@ export function fill<R, T>(options: PartialOptions<R, T>) {
     ListItem: options.List || ListItem,
     Html: options.Html || Html,
     Paragraph: options.Paragraph || Paragraph,
-    inline: options.inline || {},
+
+    Link: options.Link,
+    Em: options.Em,
+    Strong: options.Strong,
+    Del: options.Del,
+    Image: options.Image,
+    CodeSpan: options.CodeSpan,
+    Text: options.Text,
   }
 }
