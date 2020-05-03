@@ -16,3 +16,4 @@ export function marked<R=unknown, T=unknown>(markdown: string, options?: Partial
 
 export { PartialOptions, Options };
 export { quotedComponents } from './quote-comp';
+export { linkedComponents } from './link-comp';

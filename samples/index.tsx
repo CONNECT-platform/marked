@@ -7,7 +7,7 @@ const dom = new JSDOM();
 // ---------------
 
 import { Renderer } from '@connectv/html';
-import { marked, quotedComponents } from '../src';
+import { marked, quotedComponents, linkedComponents } from '../src';
 
 const text = `
 - Look \`at\` _Me!_
@@ -16,7 +16,7 @@ const text = `
 > > :Tab name=first tab
 > >
 > > Halo
-> > [Halo _World_](:X (x=2, y=34))
+> > [Halo _World_](:Tag (x=big))
 `
 
 function Tabs(_: any, renderer: any, content: any) {
@@ -27,8 +27,8 @@ function Tab({name}: any, renderer: any, content: any) {
   return <div class="tab" data-tab-name={name}>{content}</div>;
 }
 
-function Link(_: any, renderer: any, content: any) {
-  return <span class="link">{content}</span>
+function Tag({x}: any, renderer: any, content: any) {
+  return <span class="tag">{x} {content}</span>
 }
 
 function Em(_: any, renderer: any, content: any) {
@@ -39,8 +39,9 @@ const renderer = new Renderer();
 
 renderer.render(
   marked(text, {
-    Link, Em,
+    Em,
     BlockQuote: quotedComponents({ Tabs, Tab }),
+    Link: linkedComponents({ Tag })
   })
 ).on(dom.window.document.body);
 
