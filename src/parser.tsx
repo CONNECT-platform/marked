@@ -44,7 +44,7 @@ export class Parser<R=unknown, T=unknown> {
 
   private safeNext() {
     const _next = this.next();
-    if (!_next) throw new Error('Unexpected end of stream');
+    if (!_next) /* istanbul ignore next */throw new Error('Unexpected end of stream');
     return _next;
   }
 
@@ -55,7 +55,7 @@ export class Parser<R=unknown, T=unknown> {
   private parseText() {
     let body = (this.token as any).text || '';
 
-    while(this.peek().type === 'text')
+    while(this.peek().type === 'text')/* istanbul ignore next */
       body += '\n' + (this.next() as any).text;
 
     return this.inline.process(body);
@@ -121,7 +121,7 @@ export class Parser<R=unknown, T=unknown> {
         return <this.options.Paragraph>{this.inline.process(this.token.text)}</this.options.Paragraph>;
       case 'text':
         return <this.options.Paragraph>{this.parseText()}</this.options.Paragraph>
-      default:
+      default:/* istanbul ignore next */
         throw new Error('Unrecognized Token:: ' + this.token.type);
     }
   }

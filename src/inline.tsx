@@ -43,12 +43,13 @@ export class InlineProcessor<R=unknown, T=unknown> {
     const res = <fragment/>;
     this.children(src).forEach(node => {
       if (node instanceof Text && this.options.Text) {
-        renderer.render(<this.options.Text>{node.textContent || ''}</this.options.Text>).on(res);
+        renderer.render(<this.options.Text>{node.textContent/* istanbul ignore next */ || ''}</this.options.Text>)
+          .on(res);
       }
       else if (node instanceof HTMLAnchorElement && this.options.Link) {
         const options: Partial<LinkOptions> = {};
-        if (node.hasAttribute('href')) options['href'] = node.getAttribute('href') || '';
-        if (node.hasAttribute('title')) options['title'] = node.getAttribute('title') || '';
+        if (node.hasAttribute('href')) options['href'] = node.getAttribute('href')/* istanbul ignore next */ || '';
+        if (node.hasAttribute('title')) options['title'] = node.getAttribute('title')/* istanbul ignore next */ || '';
         renderer.render(<this.options.Link  {...options}>{this.buildFrom(node)}</this.options.Link>).on(res);
       } 
       else if (node instanceof HTMLElement && node.tagName === 'EM' && this.options.Em) {
@@ -73,9 +74,9 @@ export class InlineProcessor<R=unknown, T=unknown> {
       }
       else if (node instanceof HTMLImageElement && this.options.Image) {
         const options: Partial<ImageOptions> = {};
-        if (node.hasAttribute('src')) options['src'] = node.getAttribute('src') || '';
-        if (node.hasAttribute('title')) options['title'] = node.getAttribute('title') || '';
-        if (node.hasAttribute('alt')) options['alt'] = node.getAttribute('alt') || '';
+        if (node.hasAttribute('src')) options['src'] = node.getAttribute('src')/* istanbul ignore next */ || '';
+        if (node.hasAttribute('title')) options['title'] = node.getAttribute('title')/* istanbul ignore next */ || '';
+        if (node.hasAttribute('alt')) options['alt'] = node.getAttribute('alt')/* istanbul ignore next */ || '';
         renderer.render(<this.options.Image {...options}/>).on(res);
       }
       else renderer.render(node).on(res);
