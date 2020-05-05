@@ -1,4 +1,10 @@
 # @connectv/marked
+
+[![Build Status](https://badgen.net/travis/CONNECT-platform/marked?label=build&cache=300&icon=travis)](https://travis-ci.org/CONNECT-platform/marked)
+[![Code Coverage](https://badgen.net/codecov/c/github/CONNECT-platform/marked?cache=300&icon=codecov)](https://codecov.io/gh/CONNECT-platform/marked)
+[![NPM Version](https://badgen.net/npm/v/@connectv/marked?cache=300&icon=npm)](https://www.npmjs.com/package/@connectv/marked)
+[![License](https://badgen.net/github/license/CONNECT-platform/marked?icon=github)](LICENSE)
+
 Component-based markdown renderer for [CONNECTIVE HTML](https://github.com/CONNECT-platform/connective-html). The component-based approach allows you to provide your own custom (possibly interactive) components for the markdown conversion:
 
 ```tsx
