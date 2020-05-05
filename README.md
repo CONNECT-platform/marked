@@ -127,6 +127,17 @@ The following components can be overriden, alongside the properties that the mar
   - `align`: the alignment of the cell.
 - `TableHeaderCell`: used for header cells of a table (not body cells). Props:
   - `align`: the alignment of the cell.
+- `Link`: used for links, e.g. `[content](href "title")`. Props:
+  - `href`: the URL of the link
+  - `title`: the "title" attribute of the link
+- `Em`: used for emphasized text, e.g. `_hellow_`. No props passed to this component.
+- `Strong`: used for strong text, e.g. `**hellow**`. No props passed to this component.
+- `Del`: used for deleted text, e.g. `~~hellow~~`. No props passed to this component.
+- `Image`: used for images, e.g. `![alt](src)`. Props:
+  - `alt`: the alt text passed for the image,
+  - `src`: the source URL of the image.
+- `CodeSpan`: used for inline code-spans, e.g. <code>\`content\`</code>. No props passed to this component.
+- `Text`: used for normal text. No props passed to this component.
   
 ### Custom Quoted Components
 
@@ -188,6 +199,50 @@ Result (`dist/index.html`):
 ```
 
 The `quotedComponents()` method basically provides an override for `BlockQuote`. It will look at each block-quote and check if the first line starts with `:`, in that case it will find corresponding component from given map, parse its props, and pass the rest of the content of the block-quote as the component's content.
+
+### Custom Linked Components
+
+Similar to custom quoted components, you can utilize custom linked components for custom structural elements that
+are inline (i.e. appear within other text):
+
+```tsx
+// tag.tsx
+
+export function Tag(_, renderer, content) {
+  return <span class="tag">#{content}</div>;
+}
+```
+```tsx
+// index.tsx
+
+import { compile } from '@connectv/sdh';
+import { marked, linkedComponents } from '@connectv/marked';
+
+import { Tag } from './tag';
+
+const markdown = `
+# Some markdown content
+
+Hellow [world](:Tag)
+`
+
+compile(marked(markdown, {
+  Link: linkedComponents({ Tabs, Tab })
+}))
+.save('dist/index.html');
+```
+Result (`dist/index.html`):
+```html
+<html>
+  <head></head>
+  <body>
+    <h1 id="some-markdown-content">Some markdown content</h1>
+    <p>
+      Hellow <span class="tag">#world</span>
+    </p>
+  </body>
+</html>
+```
 
 ### Markdown Features
 
