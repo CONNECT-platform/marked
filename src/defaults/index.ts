@@ -1,6 +1,5 @@
 import { PartialOptions } from '../options';
 
-import { Space } from './space';
 import { Hr } from './hr';
 import { Heading } from './heading';
 import { Code } from './code';
@@ -13,7 +12,6 @@ import { Html } from './html';
 
 export function fill<R, T>(options: PartialOptions<R, T>) {
   return {
-    Space: options.Space || Space,
     Hr: options.Hr || Hr,
     Heading: options.Heading || Heading,
     Code: options.Code || Code,
@@ -23,9 +21,11 @@ export function fill<R, T>(options: PartialOptions<R, T>) {
     TableHeaderCell: options.TableHeaderCell || TableHeaderCell,
     BlockQuote: options.BlockQuote || BlockQuote,
     List: options.List || List,
-    ListItem: options.List || ListItem,
+    ListItem: options.ListItem || ListItem,
     Html: options.Html || Html,
     Paragraph: options.Paragraph || Paragraph,
+
+    Space: options.Space,
 
     Link: options.Link,
     Em: options.Em,

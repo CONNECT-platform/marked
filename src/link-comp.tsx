@@ -1,12 +1,7 @@
 import { RendererLike } from '@connectv/html';
 
 import { ComponentMap } from './comp-map';
-
-
-export interface LinkOptions {
-  href: string;
-  title: string;
-}
+import { LinkOptions } from './inline';
 
 
 export function linkedComponents(map: ComponentMap) {

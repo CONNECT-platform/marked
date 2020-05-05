@@ -65,7 +65,7 @@ export class Parser<R=unknown, T=unknown> {
     const renderer = this.renderer;
 
     switch(this.token.type) {
-      case 'space': return <fragment/>;
+      case 'space': return this.options.Space ? <this.options.Space/> : <fragment/>;
       case 'hr': return <this.options.Hr/>;
       case 'heading':
         const slug = this.slugger.slug(unescape(this.inlineText.output(this.token.text)));

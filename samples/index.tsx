@@ -45,4 +45,4 @@ renderer.render(
   })
 ).on(dom.window.document.body);
 
-console.log(dom.serialize());
+// console.log(dom.serialize());

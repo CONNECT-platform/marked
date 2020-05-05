@@ -4,6 +4,18 @@ import { RendererLike } from '@connectv/html';
 import { Options } from './options';
 
 
+export interface LinkOptions {
+  href: string;
+  title: string;
+}
+
+
+export interface ImageOptions {
+  src: string;
+  title: string;
+  alt: string;
+}
+
 export class InlineProcessor<R=unknown, T=unknown> {
   private lexer: InlineLexer;
 
@@ -34,7 +46,7 @@ export class InlineProcessor<R=unknown, T=unknown> {
         renderer.render(<this.options.Text>{node.textContent || ''}</this.options.Text>).on(res);
       }
       else if (node instanceof HTMLAnchorElement && this.options.Link) {
-        const options: Partial<{href: string, title: string}> = {};
+        const options: Partial<LinkOptions> = {};
         if (node.hasAttribute('href')) options['href'] = node.getAttribute('href') || '';
         if (node.hasAttribute('title')) options['title'] = node.getAttribute('title') || '';
         renderer.render(<this.options.Link  {...options}>{this.buildFrom(node)}</this.options.Link>).on(res);
@@ -60,8 +72,9 @@ export class InlineProcessor<R=unknown, T=unknown> {
         </this.options.CodeSpan>).on(res);
       }
       else if (node instanceof HTMLImageElement && this.options.Image) {
-        const options: Partial<{src: string, alt: string}> = {};
+        const options: Partial<ImageOptions> = {};
         if (node.hasAttribute('src')) options['src'] = node.getAttribute('src') || '';
+        if (node.hasAttribute('title')) options['title'] = node.getAttribute('title') || '';
         if (node.hasAttribute('alt')) options['alt'] = node.getAttribute('alt') || '';
         renderer.render(<this.options.Image {...options}/>).on(res);
       }

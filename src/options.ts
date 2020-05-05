@@ -1,5 +1,4 @@
 export interface Options<R, T> {
-  Space: any,
   Hr: any,
   Heading: any,
   Code: any,
@@ -14,6 +13,8 @@ export interface Options<R, T> {
   ListItem: any,
   Html: any,
   Paragraph: any,
+
+  Space?: any,
 
   Link?: any,
   Em?: any,
