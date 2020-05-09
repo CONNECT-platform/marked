@@ -56,6 +56,34 @@ describe('linkedComponents()', () => {
     })).on(document.body);
   });
 
+  it('should be possible to pass keys or values containing `=` by enclosing it with quotes', () => {
+    const renderer = new Renderer();
+
+    renderer.render(marked('[hellow](:world (x=\'hellow = world\', "y = 2" = dudes what is this?))', {
+      Link: linkedComponents({
+        world(props: any) {
+          props.x.should.equal('hellow = world');
+          props['y = 2'].should.equal('dudes what is this?');
+          return <span/>;
+        }
+      })
+    })).on(document.body);
+  });
+
+  it('should be possible to pass keys or values containing `,` by enclosing it with quotes', () => {
+    const renderer = new Renderer();
+
+    renderer.render(marked('[hellow](:world (x=`hellow , world`, "y , 2" = dudes what is this?))', {
+      Link: linkedComponents({
+        world(props: any) {
+          props.x.should.equal('hellow , world');
+          props['y , 2'].should.equal('dudes what is this?');
+          return <span/>;
+        }
+      })
+    })).on(document.body);
+  });
+
   it('should pass the proper content to the custom component.', () => {
     const renderer = new Renderer();
 

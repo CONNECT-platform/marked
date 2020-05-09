@@ -67,6 +67,42 @@ describe('quotedComponents()', () => {
     })).on(document.body);
   });
 
+  it('should be possible to pass attributes including `=` by enclosing them with quotes.', () => {
+    const renderer = new Renderer();
+
+    const text = `
+> :hellow well I 'gotta=2' say = something , and = "something else=true"
+`
+
+    renderer.render(marked(text, {
+      BlockQuote: quotedComponents({
+        hellow(props: any) {
+          props['well I \'gotta=2\' say'].should.equal('something');
+          props.and.should.equal('something else=true');
+          return <div/>;
+        }
+      })
+    })).on(document.body);
+  });
+
+  it('should be possible to pass attributes including `,` by enclosing them with quotes.', () => {
+    const renderer = new Renderer();
+
+    const text = `
+> :hellow well I 'gotta,2' say = something , and = "something, else, true"
+`
+
+    renderer.render(marked(text, {
+      BlockQuote: quotedComponents({
+        hellow(props: any) {
+          props['well I \'gotta,2\' say'].should.equal('something');
+          props.and.should.equal('something, else, true');
+          return <div/>;
+        }
+      })
+    })).on(document.body);
+  });
+
   it('should pass the proper markdown content to custom components.', () => {
     const renderer = new Renderer();
     const ref = <div/>;

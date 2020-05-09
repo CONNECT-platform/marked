@@ -2,6 +2,7 @@ import { RendererLike } from '@connectv/html';
 
 import { ComponentMap } from './comp-map';
 import { LinkOptions } from './inline';
+import { extractCompProps } from './util/extract-comp-props';
 
 
 export function linkedComponents(map: ComponentMap) {
@@ -10,12 +11,7 @@ export function linkedComponents(map: ComponentMap) {
       const name = options.href.substr(1);
       if (name in map) {
         const Comp = map[name];
-        const props = (options.title || '').split(',').reduce((props, part) => {
-          const [key, value] = part.split('=');
-          if (!!key && !!value)
-            props[key.trim()] = value.trim();
-          return props;
-        }, {} as {[prop: string]: string});
+        const props = extractCompProps(options.title || '');
 
         return <Comp {...props}>{content}</Comp>;
       }

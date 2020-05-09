@@ -1,6 +1,7 @@
 import { RendererLike } from '@connectv/html';
 
 import { ComponentMap } from './comp-map';
+import { extractCompProps } from './util/extract-comp-props';
 
 
 export function quotedComponents(map: ComponentMap) {
@@ -12,12 +13,7 @@ export function quotedComponents(map: ComponentMap) {
 
       if (name in map) {
         const Comp = map[name];
-        const props = parts.slice(1).join(' ').split(',').reduce((props, part) => {
-          const [key, value] = part.split('=');
-          if (!!key && !!value)
-            props[key.trim()] = value.trim();
-          return props;
-        }, {} as {[prop: string]: string});
+        const props = extractCompProps(parts.slice(1).join(' '));
         const children: Node[] = [];
         ref.childNodes.forEach((child, index) => { if (index >= 1) children.push(child); });
 
