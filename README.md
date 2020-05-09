@@ -233,7 +233,7 @@ Hellow [world](:Tag)
 `
 
 compile(marked(markdown, {
-  Link: linkedComponents({ Tabs, Tab })
+  Link: linkedComponents({ Tag })
 }))
 .save('dist/index.html');
 ```
