@@ -84,6 +84,32 @@ describe('linkedComponents()', () => {
     })).on(document.body);
   });
 
+  it('should be smart enough to consider extra `=` in value properly.', () => {
+    const renderer = new Renderer();
+
+    renderer.render(marked('[hellow](:world (x = y = z))', {
+      Link: linkedComponents({
+        world(props: any) {
+          props.x.should.equal('y = z');
+          return <span/>;
+        }
+      })
+    })).on(document.body);
+  });
+
+  it('should be smart enough to consider extra `,` in key properly.', () => {
+    const renderer = new Renderer();
+
+    renderer.render(marked('[hellow](:world (x , y = z))', {
+      Link: linkedComponents({
+        world(props: any) {
+          props['x , y'].should.equal('z');
+          return <span/>;
+        }
+      })
+    })).on(document.body);
+  });
+
   it('should pass the proper content to the custom component.', () => {
     const renderer = new Renderer();
 

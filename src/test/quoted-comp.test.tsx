@@ -103,6 +103,32 @@ describe('quotedComponents()', () => {
     })).on(document.body);
   });
 
+  it('should be smart enough to consider extra `=` in value properly.', () => {
+    const renderer = new Renderer();
+
+    renderer.render(marked('> :hellow x = y = z', {
+      Link: quotedComponents({
+        hellow(props: any) {
+          props.x.should.equal('y = z');
+          return <div/>;
+        }
+      })
+    })).on(document.body);
+  });
+
+  it('should be smart enough to consider extra `,` in key properly.', () => {
+    const renderer = new Renderer();
+
+    renderer.render(marked('> :hellow x , y = z', {
+      Link: quotedComponents({
+        hellow(props: any) {
+          props['x , y'].should.equal('z');
+          return <span/>;
+        }
+      })
+    })).on(document.body);
+  });
+
   it('should pass the proper markdown content to custom components.', () => {
     const renderer = new Renderer();
     const ref = <div/>;
