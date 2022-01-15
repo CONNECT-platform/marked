@@ -38,7 +38,7 @@
   "dependencies": {
     "@connectv/html": "^0.2.5",
     "@types/marked": "^0.7.3",
-    "marked": "^0.8.0"
+    "marked": "^4.0.10"
   },
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.1",
